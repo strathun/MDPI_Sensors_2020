@@ -14,7 +14,7 @@ function [dataStructure] = extractImpedanceDataGlobal(relPath)
 %       fnames : cell containing filenames. Same order as other outputs.
 
 % Sets relative filepaths
-currentFile = mfilename( 'fullpath' );
+currentFile = mfilename( 'fullpath' );  % Gets path for THIS script
 currentFolder = pwd;    % For resetting cd at end of function
 cd(fileparts(currentFile));
 cd(relPath);
