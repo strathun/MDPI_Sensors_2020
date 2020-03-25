@@ -102,6 +102,7 @@ for ii = 1:16
         PSD_gnd_H = y( 1:end,: )';  % y comes from gndHigh file
         load(fHigh)
         PSD_el_H = y';
+        PSD_F = x';
         % Subtract instrument noise from measurement
         final_PSDs_H = sqrt( ( PSD_el_H.^2 ) - ( PSD_gnd_H.^2 ) );
         
@@ -125,6 +126,7 @@ for ii = 1:16
         noiseStructure(ii).F        = fH;
         noiseStructure(ii).Spectrum = PH;
         noiseStructure(ii).PSD      = {final_PSDs_H};
+        noiseStructure(ii).PSDF      = {PSD_F};
                         
     catch
         sprintf('fail %02d',ii)
