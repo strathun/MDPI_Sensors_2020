@@ -70,7 +70,24 @@ end
 %% Plot Agilent's "raw" traces
 % Want to see which Agilent recording might have questionable measurements
 % at lower frequencies
-
+[~, numTraces] = size( noiseStructure );
+for ii = 1:numTraces
+    figure
+    loglog( noiseStructure(ii).PSDF{1}, noiseStructure(ii).PSD{1} * 1e9)
+    hold on
+    loglog( gamryStructure(ii).f, ...
+            sqrt( 4 * kT * gamryStructure(ii).Zreal ) * ( 1e9 ), '--' )
+    % Convert from Tye's pinout to gamry
+    [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
+    loglog( f_rec(:,jj), ...
+            sqrt( 4 * kT * Zest(:,jj) ) * ( 1e9 ), '.') 
+    xlim([100 10e3]); 
+    ylim([1 100]);
+    title(([sprintf('Noise for Electrode #%02d',ii)]))
+    xlabel('Frequency (Hz)')
+    ylabel('Noise Voltage (nV/$$\sqrt{Hz}$$)','Interpreter','latex')
+    legend('Agilent', 'Gamry', 'Custom')
+end
 
 %% 
 % Gamry actually matches noise pretty well at higher impedances...
@@ -83,6 +100,6 @@ end
 % time, it highlights the significance of whatever error is occuring with
 % the Gamry. 
 %%
-% Next steps:
-%  Go through and see if some of this disagreement is because of the issues 
-%  with recording with the Agilent at low frequencies.
+% So, if we look at the fully de-embedded individual spans, it the custom
+% pot actually agrees even better! We really need to figure out what's up
+% with the Gamry...
