@@ -18,6 +18,7 @@ function [ noiseStructure ] = combineNoiseSpans( relPath )
 %        F        : Frequency spectrum
 %        Spectrum : combined PSD
 %        PSD      : 3 PSDs; deembedded, BUT GAIN IS NOT DIVIDED OUT
+%                   (UPdate: It is now BEB!)
 
 % Sets relative filepaths
 currentFile = mfilename( 'fullpath' );  % Gets path for THIS script
@@ -115,12 +116,21 @@ for ii = 1:16
         % measurements across the frequency range of interest.
         load(AvH)
         y = db2mag(y);
-        highGain = interp1(x,y,fH);
-        lastGainIndex = find(isnan(highGain),1); %Actually first non gain index
-        if ~isempty(lastGainIndex)
-            highGain(lastGainIndex:end) = highGain(lastGainIndex-1);
+        gain_fullSpectrum = interp1(x,y,fH);
+        % Interp gain for each of the individual spans (from above) as
+        % well!
+        [ ~, numSpans ] = size( final_PSDs_H );
+        for kk = 1:numSpans
+            gain_spanSpectrum( :, kk ) = ...
+                interp1( x, y, PSD_F( :, kk ) );
         end
-        PH = PH./highGain;
+        lastGainIndex = find(isnan(gain_fullSpectrum),1); %Actually first non gain index/ Think I can skip this for individual spans
+        if ~isempty(lastGainIndex)
+            gain_fullSpectrum(lastGainIndex:end) = gain_fullSpectrum(lastGainIndex-1);
+        end
+        % De-Embed the gain
+        PH = PH./gain_fullSpectrum;
+        final_PSDs_H = final_PSDs_H ./ gain_spanSpectrum;
         
         noiseStructure(ii).E        = ii;
         noiseStructure(ii).F        = fH;
