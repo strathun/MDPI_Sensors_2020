@@ -53,11 +53,36 @@ for ii = 1:numTraces
     legend('Agilent', 'Gamry', 'Custom')
 end
 
+%% Plot Gamry 2nd pass
+% This is to see if any significant change took place throughout the course
+% of measurements
+[~, numTraces] = size( gamryStructure_Round2 );
+electrodeOrder = [ 01 05 08 09 12 16 ]; % Manually set from *_Round2
+for ii = 1:numTraces
+    jj = electrodeOrder(ii);
+    figure( jj )
+    loglog( gamryStructure_Round2(ii).f, ...
+            sqrt( 4 * kT * gamryStructure_Round2(ii).Zreal ) * ( 1e9 ), '--', ...
+            'Color', 'r')
+end
+
+
+%% Plot Agilent's "raw" traces
+% Want to see which Agilent recording might have questionable measurements
+% at lower frequencies
+
+
 %% 
 % Gamry actually matches noise pretty well at higher impedances...
 % On first pass, looks like the custom pot. matches better... Still
 % problems at low frequency for alot. 
+%%
+% Interestingly, we see a decrease in impedance across the board for
+% measurements taken with the Gamry at the beginning of the experiment to
+% the end. While the decrease in impedance is expected with increased soak
+% time, it highlights the significance of whatever error is occuring with
+% the Gamry. 
+%%
 % Next steps:
 %  Go through and see if some of this disagreement is because of the issues 
 %  with recording with the Agilent at low frequencies.
-%  Add second pass of Gamry repeats just to see how much change there was
