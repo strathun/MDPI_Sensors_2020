@@ -111,12 +111,12 @@ for ii = 1:numSols
     jj = pointerArray(ii);
     loglog( gamryStructure_Round2(jj).f, ...
             gamryStructure_Round2(jj).Zmag, ...
-            'Color', colorArray(ii,:))
+            '--', 'Color', colorArray(ii,:))
     hold on
 end
 xlabel( 'Frequency (Hz)' )
 ylabel( 'mag(Z) (Ohm)' ) 
-title('')
+title('Gamry ERef vs EOC')
 %% Comparing two separate measurements from Tyes pot.
 
 figure(5)
