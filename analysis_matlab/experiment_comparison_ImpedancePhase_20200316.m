@@ -30,15 +30,19 @@ load('..\rawData\CustomPot\20200316_TDT21_Day03\2020-03-16_12hr_14min_18sec_MUX_
 %% Plot Mag Impedance of Round 1 Gamry
 figure
 numSols = length(gamryStructure);
+colorArray = lines(numSols);
 for ii = 1:numSols
     loglog( gamryStructure(ii).f, ...
-            gamryStructure(ii).Zmag )
+            gamryStructure(ii).Zmag, ...
+            'Color', colorArray( ii, : ) )
+    [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
     hold on
-    loglog( f_rec(:,ii), Zest(:,ii) , 'o');
+    loglog( f_rec(:, jj), Zest(:, jj) , 'o', ...
+            'Color', colorArray( ii, : ) );
 end
 xlabel( 'Frequency (Hz)' )
 ylabel( 'mag(Z) (Ohm)' ) 
-title('')
+title('Impedance Mag; Gamry vs Custom Pot')
 
 %% Plot Mag Impedance of Round 2 Gamry EOC 
 figure(2)
@@ -118,7 +122,7 @@ xlabel( 'Frequency (Hz)' )
 ylabel( 'mag(Z) (Ohm)' ) 
 title('Gamry ERef vs EOC')
 %% Comparing two separate measurements from Tyes pot.
-
+% Just a gut check
 figure(5)
 [~, numSols] = size(f_rec);
 colorArray = lines(numSols);
@@ -134,3 +138,24 @@ for ii = 1:numSols
             'color', colorArray(ii,:));
     hold on
 end
+title('Gut Check; Custom vs Custom')
+
+%% Plot Phase of Round 1 Gamry vs Custom
+figure
+numSols = length(gamryStructure);
+colorArray = lines(numSols);
+for ii = 1:numSols
+    loglog( gamryStructure(ii).f, ...
+            gamryStructure(ii).Phase * (-1), ...
+            'Color', colorArray( ii, : ) )
+    hold on
+    [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
+    loglog( f_rec(:, jj), phases_rec(:, jj), 'o', ...
+            'Color', colorArray( ii, : ) );
+end
+xlabel( 'Frequency (Hz)' )
+ylabel( 'Phase' ) 
+title('Phase; Gamry vs Custom Pot')
+
+%%
+% Not sure what's up with Tye's phase. 
