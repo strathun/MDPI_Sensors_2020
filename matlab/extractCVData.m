@@ -42,7 +42,7 @@ for ii = 1:length(fnames)
     curveStartIndex = find(~cellfun(@isempty,strfind(c, sniffer )));
     fullTraces = length(curveStartIndex) - 1;   % Final curve is typically not a complete measurement, so we're ignoring it.
     
-    dataStructure(ii).electrode = electrode;
+    dataStructure(ii).fname = currentNameStr;
     for jj = 1:fullTraces
         line = curveStartIndex(jj) + 1;
         % Grab and store all the data
@@ -51,5 +51,6 @@ for ii = 1:length(fnames)
         dataStructure(ii).current(jj,:) = dataArray(2:end,5);
     end    
 end
+cd( currentFolder )
 end
 
