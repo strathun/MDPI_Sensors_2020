@@ -1,4 +1,4 @@
-%% plotScript_comparison_ImpedancePhase_20200323
+%% experiment_Impedance_ForcedOffset_
 % Compares magnitude of impedance and phase of gamry and custom phate
 % All data collected 20200323, using TDT22 in vitro (Old PBS)
 
