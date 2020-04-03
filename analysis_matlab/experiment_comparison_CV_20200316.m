@@ -47,6 +47,14 @@ for ii = 1:numTrodes
     scatter( Vstim( ii, : ), Im( ii, : ), '.' )
 end
 
+%% Plot other CV file I have to see if the speeds are the same
+load('2020-03-16_14hr_04min_14sec_TDT21_CV100.mat')
+[ numTrodes, ~ ] = size ( Im );
+for ii = 1:numTrodes
+    figure
+    scatter( Vstim( ii, : ), Im( ii, : ), '.' )
+    title(' CV_2 ')
+end
 %%
 % Interesting. They are in the same approximate ranges, but Tye's are much
 % more interesting...
@@ -57,4 +65,5 @@ end
 %       what was taken between
 %       Have direct measurements of the individual electrodes ready
 %       Check the other CV file Tye gave. Maybe this one isn't actually
-%           what the file says?
+%           what the file says? Interesting! This one seems to be much
+%           closer to Gamry
