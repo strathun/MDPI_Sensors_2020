@@ -43,6 +43,28 @@ end
 xlabel( 'Frequency (Hz)' )
 ylabel( 'mag(Z) (Ohm)' ) 
 title('Impedance Mag; Gamry vs Custom Pot')
+leg = legend(' ');
+title(leg, '- = Gamry; o = Custom Pot.')
+
+%% Percent Error
+% Plots percent error between the two systems
+figure
+numSols = length(gamryStructure);
+for ii = 1:numSols
+[ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
+% Interp to Gamry resolution
+customPot_interpolated = interp1( f_rec(:, jj), Zest(:, jj), ...
+                gamryStructure(ii).f );
+% Calc. % error and plot
+impedance_difference = abs( customPot_interpolated - ...
+                            gamryStructure(ii).Zmag );
+percent_error = ( impedance_difference ./ gamryStructure(ii).Zmag ) * 100 ;
+semilogx( gamryStructure(ii).f, percent_error )
+hold on          
+end
+xlabel( 'Frequency (Hz)' )
+ylabel( '% Error' ) 
+title('Impedance Mag; % Error')
 
 %% Plot Mag Impedance of Round 2 Gamry EOC 
 figure(2)
@@ -67,8 +89,9 @@ for ii = 1:numSols
 end
 xlabel( 'Frequency (Hz)' )
 ylabel( 'mag(Z) (Ohm)' ) 
-title('')
-
+title('Gamry (OCP) vs Custom')
+leg = legend(' ');
+title(leg, '- = Gamry; o = Custom Pot.')
 %% Plot Mag Impedance of Round 2 Gamry ERef (before CV)
 figure(3)
 pointerArray = [8 10 12]; % Selects EREF Gamry measurements
@@ -92,9 +115,9 @@ for ii = 1:numSols
 end
 xlabel( 'Frequency (Hz)' )
 ylabel( 'mag(Z) (Ohm)' ) 
-title('')
-
-
+title('Gamry (REF) vs Custom')
+leg = legend(' ');
+title(leg, '- = Gamry; o = Custom Pot.')
 %% Comparing Gamry ERef vs EOC
 figure(4)
 pointerArray = 2:4; % Selects EOC Gamry measurements
@@ -115,12 +138,14 @@ for ii = 1:numSols
     jj = pointerArray(ii);
     loglog( gamryStructure_Round2(jj).f, ...
             gamryStructure_Round2(jj).Zmag, ...
-            '--', 'Color', colorArray(ii,:))
+            '--', 'LineWidth', 2.0, 'Color', colorArray(ii,:))
     hold on
 end
 xlabel( 'Frequency (Hz)' )
 ylabel( 'mag(Z) (Ohm)' ) 
 title('Gamry ERef vs EOC')
+leg = legend(' ');
+title(leg, '- = EOC; -- = REF')
 %% Comparing two separate measurements from Tyes pot.
 % Just a gut check
 figure(5)
@@ -156,6 +181,7 @@ end
 xlabel( 'Frequency (Hz)' )
 ylabel( 'Phase' ) 
 title('Phase; Gamry vs Custom Pot')
-
+leg = legend(' ');
+title(leg, '- = Gamry; o = Custom Pot.')
 %%
 % Not sure what's up with Tye's phase. 
