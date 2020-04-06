@@ -72,21 +72,22 @@ end
 % at lower frequencies
 [~, numTraces] = size( noiseStructure );
 for ii = 1:numTraces
-    figure
-    loglog( noiseStructure(ii).PSDF{1}, noiseStructure(ii).PSD{1} * 1e9)
-    hold on
+    figure    
     loglog( gamryStructure(ii).f, ...
             sqrt( 4 * kT * gamryStructure(ii).Zreal ) * ( 1e9 ), '--' )
+    hold on
     % Convert from Tye's pinout to gamry
     [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
     loglog( f_rec(:,jj), ...
             sqrt( 4 * kT * Zest(:,jj) ) * ( 1e9 ), '.') 
+    % Agilent
+    loglog( noiseStructure(ii).PSDF{1}, noiseStructure(ii).PSD{1} * 1e9)
     xlim([100 10e3]); 
     ylim([1 100]);
     title(([sprintf('Noise for Electrode #%02d',ii)]))
     xlabel('Frequency (Hz)')
     ylabel('Noise Voltage (nV/$$\sqrt{Hz}$$)','Interpreter','latex')
-    legend('Agilent', 'Gamry', 'Custom')
+    legend('Gamry', 'Custom')
 end
 
 %% 
