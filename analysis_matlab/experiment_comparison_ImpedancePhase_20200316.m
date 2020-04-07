@@ -169,13 +169,14 @@ title('Gut Check; Custom vs Custom')
 figure
 numSols = length(gamryStructure);
 colorArray = lines(numSols);
+phases_rec_degrees = (-1)*( rad2deg( phases_rec ) ) ; % Phase comes in as radians
 for ii = 1:numSols
     semilogx( gamryStructure(ii).f, ...
             gamryStructure(ii).Phase, ...
             '.' , 'Color', colorArray( ii, : ) )
     hold on
     [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
-    semilogx( f_rec(:, jj), phases_rec(:, jj), 'o', ...
+    semilogx( f_rec(:, jj), phases_rec_degrees(:, jj), 'o', ...
             'Color', colorArray( ii, : ) );
 end
 xlabel( 'Frequency (Hz)' )
@@ -184,4 +185,4 @@ title('Phase; Gamry vs Custom Pot')
 leg = legend(' ');
 title(leg, '- = Gamry; o = Custom Pot.')
 %%
-% Not sure what's up with Tye's phase. 
+% 
