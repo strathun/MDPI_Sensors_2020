@@ -229,6 +229,25 @@ for ii = 1:numTrodes_slow
     end
 
 end
+
+%% Plot CVs Gamry and Custom 100 mV/s
+pointerArray = [ 2 3 5 6 ];
+electrode_numbers = [ 2 7 15 16 ];  % Electrode nums for plotted traces. used to match to custom
+numTrodes = length( pointerArray );
+for ii = 1:numTrodes
+    figure
+    jj = pointerArray( ii );
+    start_pointer = scan_length_slow; 
+    [ numScans, ~] = size( cvStructure( jj ).potential );
+    scatter( cvStructure(jj).potential(numScans,:), ...
+             cvStructure(jj).current(numScans,:).*(1e6), '.');
+    title((sprintf('E%02d', electrode_numbers(ii) )))
+    xlabel( 'Potential vs OCP (V)' )
+    ylabel( 'Current (uA)' )
+    legend('Gamry')
+    ylim([ -0.5 3])
+    xlim([ -0.6 1.0 ])
+end
 %%
 % Interesting. They are in the same approximate ranges, but Tye's are much
 % more interesting...
