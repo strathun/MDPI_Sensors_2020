@@ -102,6 +102,8 @@ for ii = 1:numTrodes
     xlabel( 'Potential vs OCP (V)' )
     ylabel( 'Current (uA)' )
     legend( 'In Vitro', 'In Vivo' )
+    xlim([ -0.6 1.0 ])
+    ylim([ -1.0 2.0 ])
 end
 
 %%
