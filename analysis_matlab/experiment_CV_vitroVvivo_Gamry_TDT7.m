@@ -62,6 +62,27 @@ for ii = 1:numTrodes
     ylabel( 'Current (uA)' )
 end
 
+%% Plot CVs Gamry (vivo) all traces.
+numTrodes = length( cvStructure_vivo );
+colorArray = lines(1);
+electrode_numbers = [ 4 6 8 13 ];
+for ii = 1:numTrodes
+    figure
+    [ numScans, ~] = size( cvStructure_vivo( ii ).potential );
+    transparencyFactor = 1/( numScans );
+    for kk = 2:numScans
+        % first scan is ignored   
+        s = scatter( cvStructure_vivo(ii).potential(kk,:), ...
+                     cvStructure_vivo(ii).current(kk,:).*(1e6), 1, '.', ...
+                     'MarkerEdgeColor', colorArray(1,:));
+        s.MarkerEdgeAlpha = transparencyFactor * ( kk );
+        hold on
+    end
+    title((sprintf( 'E%02d', electrode_numbers(ii) ) ) ) % Measurements are in order
+    xlabel( 'Potential vs OCP (V)' )
+    ylabel( 'Current (uA)' )
+end
+
 %% Plot CVs Gamry vivo vs vitro
 pointerArray = [ 4 6 8 ]; % for in vitro measurements
 electrode_numbers = [ 4 6 8 ];  % Electrode nums for plotted traces. used to match to custom
@@ -80,6 +101,7 @@ for ii = 1:numTrodes
     title((sprintf('E%02d', electrode_numbers(ii) )))
     xlabel( 'Potential vs OCP (V)' )
     ylabel( 'Current (uA)' )
+    legend( 'In Vitro', 'In Vivo' )
 end
 
 %%
