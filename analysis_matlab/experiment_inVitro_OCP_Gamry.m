@@ -55,12 +55,17 @@ title( 'Timecourse of OCP for one TDT electrode' )
 % second measurement taken immediately after (although only measured for 2
 % minutes) looks pretty stable changing only about 0.85 mV. 
 
-%% OCP Distributions
+%% OCP Distributions Gamry
 numTrodes = length( ocp_preEIS );
 % Convert to array for histogram because I'm bad at coding
 for ii = 1:numTrodes
     ocpArray(ii) = ocp_preEIS(ii).VvRef(end);
 end
 figure
-h = histogram(ocpArray*(1e3), 16);
-% Figure out a better distribution probably...
+h = histogram(ocpArray*(1e3));
+h.BinWidth = 5;
+xlabel( 'Open Circuit Potential' )
+ylabel( 'Counts' )
+title( 'In Vitro OCP Distribution for One Array; Gamry' )
+
+
