@@ -66,6 +66,26 @@ xlabel( 'Frequency (Hz)' )
 ylabel( '% Error' ) 
 title('Impedance Mag; % Error')
 
+%% Plot Phase of Round 1 Gamry vs Custom
+figure(6)
+numSols = length(gamryStructure);
+colorArray = lines(numSols);
+phases_rec_degrees = (-1)*( rad2deg( phases_rec ) ) ; % Phase comes in as radians
+for ii = 1:numSols
+    semilogx( gamryStructure(ii).f, ...
+            gamryStructure(ii).Phase, ...
+            '.' , 'Color', colorArray( ii, : ) )
+    hold on
+    [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
+    semilogx( f_rec(:, jj), phases_rec_degrees(:, jj), 'o', ...
+            'Color', colorArray( ii, : ) );
+end
+xlabel( 'Frequency (Hz)' )
+ylabel( 'Phase' ) 
+title('Phase; Gamry vs Custom Pot')
+leg = legend(' ');
+title(leg, '- = Gamry; o = Custom Pot.')
+
 %% Plot Mag Impedance of Round 2 Gamry EOC 
 figure(2)
 pointerArray = 2:6; % Selects EOC Gamry measurements
@@ -165,24 +185,6 @@ for ii = 1:numSols
 end
 title('Gut Check; Custom vs Custom')
 
-%% Plot Phase of Round 1 Gamry vs Custom
-figure
-numSols = length(gamryStructure);
-colorArray = lines(numSols);
-phases_rec_degrees = (-1)*( rad2deg( phases_rec ) ) ; % Phase comes in as radians
-for ii = 1:numSols
-    semilogx( gamryStructure(ii).f, ...
-            gamryStructure(ii).Phase, ...
-            '.' , 'Color', colorArray( ii, : ) )
-    hold on
-    [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
-    semilogx( f_rec(:, jj), phases_rec_degrees(:, jj), 'o', ...
-            'Color', colorArray( ii, : ) );
-end
-xlabel( 'Frequency (Hz)' )
-ylabel( 'Phase' ) 
-title('Phase; Gamry vs Custom Pot')
-leg = legend(' ');
-title(leg, '- = Gamry; o = Custom Pot.')
+
 %%
 % 
