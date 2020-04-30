@@ -23,6 +23,8 @@ outputDir = ['../output/' parts{end}];
 %% Extract data
 [gamryStructure_Round2] = ...
     extractImpedanceDataGlobal('..\rawData\Gamry\20200316_TDT21_Day03\Impedance\Round2');
+[gamryStructure_Round1] = ...
+    extractImpedanceDataGlobal('..\rawData\Gamry\20200316_TDT21_Day03\Impedance\Round1');
 [ocpStructure] = ...
     extractEarlyOCPData('..\rawData\Gamry\20200316_TDT21_Day03\Impedance\Round2');
 [cvStructure] = extractCVData('..\rawData\Gamry\20200316_TDT21_Day03\CV'); 
@@ -44,6 +46,7 @@ for ii = 1:number_electrodes
             gamryStructure_Round2(kk).Zmag, 'o', ...
             'Color', colorArray(ii,:))
 end
+grid on
 xlabel( 'Frequency (Hz)' )
 ylabel( 'mag(Z) (Ohm)' ) 
 title(' Impedance Magnitude before and after CV; Gamry; 3 electrodes')
@@ -106,8 +109,12 @@ for ii = 1:numTrodes
     end
     xlabel( 'Potential vs OCP (V)' )
     ylabel( 'Current (uA)' )
+%     if ii < 2
+%         ylim( [-0.5 4.5] )
+%     end
     ylim( [-0.5 4.5] )
     xlim( [-0.8 1])
+    grid on
 end
 
 % Plot the vs ERef for the yellow electrode
@@ -122,17 +129,79 @@ for ii = 1:numTrodes
         % first scan is ignored   
         s = scatter( cvStructure(jj).potential(kk,:), ...
                      cvStructure(jj).current(kk,:).*(1e6), 1, '.', ...
-                     'MarkerEdgeColor', colorArray(ii,:));
+                     'MarkerEdgeColor', colorArray(3,:));
         s.MarkerEdgeAlpha = transparencyFactor * ( kk );
         hold on
     end
     xlabel( 'Potential vs OCP (V)' )
     ylabel( 'Current (uA)' )
     xlim( [-0.8 1])
+    grid on
 end
 %%
 % Ok something weird definitely happened with the yellow electrode. Is this
 % the same electrode that looks bad with Tye's scans? Maybe this is where
 % it was damaged...
-% Next on the list:
-%   Look at the vs ERef CV
+
+%% Progression of damage for the yellow electrode
+% figures can be pulled from above. Just want to make individual figures
+% for each measurement here. 
+colorArray = lines(3);  % keeps our pretty yellow consistent
+
+% Round 1 impedance measurements
+pointerArray_early = 9;
+figure
+jj = pointerArray_early;
+loglog( gamryStructure_Round1(jj).f, ...
+        gamryStructure_Round1(jj).Zmag, ...
+        'Color', colorArray(3,:), 'LineWidth', 1.5)
+xlabel( 'Frequency (Hz)' )
+ylabel( 'mag(Z) (Ohm)' ) 
+title(' Early Impedance Magnitude; Gamry ')
+ylim([1e3 2e6])
+grid on
+
+% Impedances before and after CV
+pointerArray_pre = 12; % Selects pre EREF Gamry
+pointerArray_post = 11; % Selects post EREF Gamry
+figure
+jj = pointerArray_pre;
+loglog( gamryStructure_Round2(jj).f, ...
+        gamryStructure_Round2(jj).Zmag, ...
+        'Color', colorArray(3,:), 'LineWidth', 1.5)
+xlabel( 'Frequency (Hz)' )
+ylabel( 'mag(Z) (Ohm)' ) 
+title(' Impedance Magnitude before CV; Gamry ')
+ylim([1e3 2e6])
+grid on
+
+figure
+kk = pointerArray_post;
+loglog( gamryStructure_Round2(kk).f, ...
+        gamryStructure_Round2(kk).Zmag, 'o', ...
+        'Color', colorArray(3,:), 'LineWidth', 1.5)
+xlabel( 'Frequency (Hz)' )
+ylabel( 'mag(Z) (Ohm)' ) 
+title(' Impedance Magnitude after CV; Gamry')
+ylim([1e3 2e6])
+grid on
+
+%%
+% NOTE: The datadoc will include the EIS and CV measurements made with the
+% custom pot as well. 
+
+%% Early impedance measurement from custom pot
+load('..\rawData\CustomPot\20200316_TDT21_Day03\2020-03-16_12hr_14min_18sec_MUX_vivoTDT21_staged')
+% Plot impedance for the yellow electrode (E08 for custom E09 for gamry
+figure
+for ii = 9:9
+    [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
+    loglog( f_rec(:,jj), ...
+            Zest(:,jj), ...
+            'Color', colorArray(3,:), 'LineWidth', 1.5) 
+    ylim([1e3 2e6])
+end
+xlabel( 'Frequency (Hz)' )
+ylabel( 'mag(Z) (Ohm)' ) 
+title(' Early Impedance Magnitude; CustomPot ')
+grid on
