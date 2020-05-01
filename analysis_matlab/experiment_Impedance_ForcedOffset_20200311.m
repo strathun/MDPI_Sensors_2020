@@ -25,18 +25,23 @@ outputDir = ['../output/' parts{end}];
 figure
 % Plot og with offset at 0V
 loglog( gamryStructure( 1 ).f, ...
-        gamryStructure( 1 ).Zmag )
+        gamryStructure( 1 ).Zmag, ...
+        'Color', 'k' )
     hold on
 loglog( gamryStructure_forced( 1 ).f, ...
-        gamryStructure_forced( 1 ).Zmag )
+        gamryStructure_forced( 1 ).Zmag, '--', ...
+        'Color', 'k' )
 loglog( gamryStructure_forced( 2 ).f, ...
-        gamryStructure_forced( 2 ).Zmag )
+        gamryStructure_forced( 2 ).Zmag, '.', ...
+        'Color', 'k'  )
 ylim([300 4e4])
 xlim([10 10e5]); 
 xlabel('Frequency (Hz)')
 ylabel('Mag(Impedance)')
 leg = legend('0 mV', '-100 mV', '-600 mV');
-title(leg,'Forced Offset')
+title(leg,'Forced Offsets')
+title('In Vitro Forced Offsets; one electrode; Gamry')
+grid on
 %%
 % Definitley influenced! Interesting that the high frequency kind of
 % bottoms out, but this actually makes sense for in vitro. You would expect
