@@ -104,3 +104,19 @@ end
 % So, if we look at the fully de-embedded individual spans, it the custom
 % pot actually agrees even better! We really need to figure out what's up
 % with the Gamry...
+
+%% Plot Gamry v Custom Impedance
+[~, numTraces] = size( noiseStructure );
+figure
+for ii = 1:numTraces
+    loglog( gamryStructure(ii).f, ...
+            gamryStructure(ii).Zreal )
+        hold on
+    % Convert from Tye's pinout to gamry
+    [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
+    loglog( f_rec(:,jj), ...
+            Zest(:,jj) , '.') 
+end
+xlim([100 10000])
+xlabel('Frequency (Hz)')
+ylabel('Real(Impedance)')
