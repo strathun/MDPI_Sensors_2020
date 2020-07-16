@@ -48,7 +48,7 @@ title(leg, '- = Gamry; o = Custom Pot.')
 
 %% Percent Error
 % Plots percent error between the two systems
-figure
+figure(200)
 numSols = length(gamryStructure);
 for ii = 1:numSols
 [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );

@@ -108,15 +108,40 @@ end
 %% Plot Gamry v Custom Impedance
 [~, numTraces] = size( noiseStructure );
 figure
+colorArray = lines( numTraces );
 for ii = 1:numTraces
     loglog( gamryStructure(ii).f, ...
-            gamryStructure(ii).Zreal )
+            gamryStructure(ii).Zmag, ...
+            'Color', colorArray( ii, : ))
         hold on
     % Convert from Tye's pinout to gamry
     [ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
     loglog( f_rec(:,jj), ...
-            Zest(:,jj) , '.') 
+            Zest(:,jj) , '.', ...
+            'Color', colorArray( ii, : )) 
 end
 xlim([100 10000])
 xlabel('Frequency (Hz)')
-ylabel('Real(Impedance)')
+ylabel('Mag(Impedance)')
+legend('Gamry', 'Custom')
+title('In Vitro Comparison; Gamry V Custom')
+
+%% Difference between systems
+% Plots percent error between the two systems
+figure
+numSols = length(gamryStructure);
+for ii = 1:numSols
+[ jj ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', ii );
+% Interp to Gamry resolution
+customPot_interpolated = interp1( f_rec(:, jj), Zest(:, jj), ...
+                gamryStructure(ii).f );
+% Calc. % error and plot
+impedance_difference = abs( customPot_interpolated - ...
+                            gamryStructure(ii).Zmag );
+percent_error = ( impedance_difference ./ gamryStructure(ii).Zmag ) * 100 ;
+semilogx( gamryStructure(ii).f, percent_error )
+hold on          
+end
+xlabel( 'Frequency (Hz)' )
+ylabel( '% Difference Relative to Gamry' ) 
+title(' % Difference of mag(impedance) of Custom Pstat Relative to Gamry')
