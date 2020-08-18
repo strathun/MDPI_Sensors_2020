@@ -73,8 +73,36 @@ title('In Vitro Impedance and Number of Electrodes; Custom E16')
 leg = legend('1', '2', '4', '8', '16');
 title(leg,'Connected Electrodes');
 
-
 %% Plot Gamry Impedance vs increasing electrode number
+figure
+colorArray = lines( 5 );
+pointerArray = [ 34 29 28 27 30]; 
+pointerArray_custom = [ 10 13 16 19 22 ];
+for ii = 1:5
+    jj = pointerArray( ii );
+
+    loglog( gamryStructure(jj).f, ...
+            gamryStructure(jj).Zmag, ...
+            'Color', colorArray( ii, : ))
+    hold on
+end
+for ii = 1:5
+    kk = pointerArray_custom( ii );
+    loglog( customStructure(kk).f(:,1), ...
+            customStructure(kk).Zmag(:,1), ...
+            '--', 'Color', colorArray( ii, : ))
+        hold on
+end
+
+grid on
+xlim([100 10000])
+xlabel('Frequency (Hz)')
+ylabel('Mag(Impedance)')
+title('In Vitro Impedance and Number of Electrodes; Gamry(-) V Custom(--) E16')
+leg = legend('1', '2', '4', '8', '16');
+title(leg,'Connected Electrodes');
+
+%% Plot Gamry Impedance vs increasing electrode number (E01)
 % Repeating this with the original electrode (does not have a direct
 % comparison with custom, just want to see if the effect is as dramatic.
 figure
