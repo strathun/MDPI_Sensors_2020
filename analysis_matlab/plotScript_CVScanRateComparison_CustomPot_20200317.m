@@ -99,3 +99,24 @@ xlim([ -0.2 0.6 ])
 xlabel( 'Potential vs OCP (V)' )
 ylabel( 'Current (uA)' )
 
+%% Plot CV Traces 100mV/s (only)
+load('..\rawData\CustomPot\20200317_TDT22_InVitro_unsureOfSolution\2020-03-17_21hr_03min_51sec_TDT22_CV100.mat');
+[ ~, totalPoints_vitro ] = size ( Im );
+scan_length_vitro = ceil( totalPoints_vitro/2 ); % 2 total scans
+pointerArray = [ 3 4 6 7 9 16 ];
+numTrodes = length( pointerArray );
+figure
+for ii = 1:numTrodes
+    jj = pointerArray(ii);
+    [ kk ] = pinoutConverter( 'gamry', 'customPot', 'trodeSpecifier', jj );
+    start_pointer = scan_length_vitro; 
+    stop_pointer  = totalPoints_vitro;
+    scatter( Vstim( kk, start_pointer:stop_pointer ), ...
+             Im( kk, start_pointer:stop_pointer ).*(1e6), '.');
+    hold on
+end
+% title((sprintf('E%02d', ii )))
+xlabel( 'Voltage (V)' )
+ylabel( 'Current (uA)' )
+ylim([ -3 4])
+xlim([ -0.4 0.8 ])

@@ -1,4 +1,4 @@
-%% plotScript_comparison_ImpedancePhase_20200323
+%% experiment_TDT_Impedance_Phase_Multiple
 % This experiment is to get a good picture of just how much variation we
 % see across multiple TDT in vitro measurements across the years. 
 % Data is taken from many sessions and can be found in Extract Impedance
@@ -34,6 +34,8 @@ outputDir = ['../output/' parts{end}];
     extractImpedanceDataGlobal('..\rawData\Gamry\20200311_TDT21_InVitro_1xPBSNew\Impedance');
 [gamryStructure_TDT22] = ...
     extractImpedanceDataGlobal('..\rawData\Gamry\20200323_TDT22_InVitro_OldPBS');
+[gamryStructure_TDT23] = ...
+    extractImpedanceDataGlobal('..\rawData\Gamry\20200821_TDT23_InVitro_OldPBS');
 load('..\rawData\CustomPot\20200323_TDT22_InVitro_OldPBS\2020-03-23_13hr_17min_28sec_TDT22')
 
 %% Plot Mag Impedance for each array
@@ -41,7 +43,7 @@ load('..\rawData\CustomPot\20200323_TDT22_InVitro_OldPBS\2020-03-23_13hr_17min_2
 % primary plot will be with the mean of all this data
 % Also builds stats for later
 
-numArrays = 7; % hard coded for now. Change if add or subtract arrays above
+numArrays = 8; % hard coded for now. Change if add or subtract arrays above
 figure
 loglog( [gamryStructure_TDT10.f], [gamryStructure_TDT10.Zmag] )
 avgStructure(1).f    = mean([gamryStructure_TDT10.f],2);
@@ -70,6 +72,10 @@ figure
 loglog( [gamryStructure_TDT22.f], [gamryStructure_TDT22.Zmag] )
 avgStructure(7).f    = mean([gamryStructure_TDT22.f],2);
 avgStructure(7).Zmag = mean([gamryStructure_TDT22.Zmag],2);
+figure
+loglog( [gamryStructure_TDT23.f], [gamryStructure_TDT23.Zmag] )
+avgStructure(8).f    = mean([gamryStructure_TDT23.f],2);
+avgStructure(8).Zmag = mean([gamryStructure_TDT23.Zmag],2);
 for ii = 1:numArrays
     figure(ii)
     xlim([10 1000e3]); 
@@ -85,11 +91,12 @@ for ii = 1:numArrays
     loglog( avgStructure(ii).f, avgStructure(ii).Zmag )
     hold on
 end
+grid on
 xlim([10 10e5]); 
 ylim([100 1e6])
 xlabel('Frequency (Hz)')
-ylabel('Mag(Impedance)')
-leg = legend('10', '11', '12', '17', '19', '21', '22');
+ylabel('Impedance Mag. (Ohms)')
+leg = legend('10', '11', '12', '17', '19', '21', '22', '23');
 title(leg,'TDT#')
 
 %%
