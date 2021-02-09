@@ -1,4 +1,4 @@
-%% experiment_Gamry_ImpedanceConsistency_24HourRecording
+%% experiment_Gamry_ImpedanceConsistency_72HourRecording
 % 
 
 close all 
@@ -16,7 +16,7 @@ outputDir = ['../output/' parts{end}];
 
 %% Extract impedance data
 [gamryStructure] = ...
-    extractImpedanceDataGlobal('..\rawData\Gamry\20200825_TDT22_Invitro_OldPBS_r24hr');
+    extractImpedanceDataGlobal('..\rawData\Gamry\20200922_TDT24_Invitro_1xPBS_72hr_1st24');
 
 %% Plot Impedance (new vs Old) (Individual)
 [~, numTraces] = size( gamryStructure );

@@ -1,10 +1,13 @@
-%% experiment_ImpedanceVIncreasingChannels_VariConc_Gamry_20200915
+%% experiment_ImpedanceVIncreasingChannels_VariRef_Gamry_20200929
 % Attempting to recreate the errors with increasing channel count that were
 % seen with the custom system on 20200629
 % Tried to mimic this effect by connecting channels not being measured with
 % the gamry to gamry's floating ground.
-% This experiment was repeated in freshly made (0915) 1xPBS, 2xPBS and
-% 0p1xPBS
+% Then, I tried to modify (reduce) these errors by moving the reference
+% electrode closer to the working electrode
+% Config 1: Control (old setup)
+% Config 2: Modified counter electrode
+% Config 3: Modified Reference electrode
 
 close all 
 clearvars 
@@ -21,23 +24,21 @@ outputDir = ['../output/' parts{end}];
 
 %% Extract impedance data
 % Gamry
-[gamryStructure_1x] = ...
-    extractImpedanceDataGlobal('..\rawData\Gamry\20200915_TDT22_InVitro_1xPBS');
-[gamryStructure_2x] = ...
-    extractImpedanceDataGlobal('..\rawData\Gamry\20200915_TDT22_InVitro_2xPBS');
-[gamryStructure_0p1x] = ...
-    extractImpedanceDataGlobal('..\rawData\Gamry\20200915_TDT22_InVitro_0p1xPBS');
+[gamryStructure_C1] = ...
+    extractImpedanceDataGlobal('..\rawData\Gamry\20200929_TDT22_InVitro_1xPBS_C1');
+[gamryStructure_C2] = ...
+    extractImpedanceDataGlobal('..\rawData\Gamry\20200929_TDT22_InVitro_1xPBS_C2');
+[gamryStructure_C3] = ...
+    extractImpedanceDataGlobal('..\rawData\Gamry\20200929_TDT22_InVitro_1xPBS_C3');
 
-
-
-%% Plot Gamry Impedance vs increasing electrode number_ 1xPBS
+%% Plot Gamry Impedance vs increasing electrode number_C1
 figure
 colorArray = lines( 6 );
 pointerArray = [ 5 3 2 1 4 6]; 
 for ii = 1:6
     jj = pointerArray( ii );
-    loglog( gamryStructure_1x(jj).f, ...
-            gamryStructure_1x(jj).Zmag, ...
+    loglog( gamryStructure_C1(jj).f, ...
+            gamryStructure_C1(jj).Zmag, ...
             'Color', colorArray( ii, : ))
     hold on
 end
@@ -45,18 +46,18 @@ grid on
 xlim([100 100000])
 xlabel('Frequency (Hz)')
 ylabel('Mag(Impedance)')
-title('In Vitro Impedance and Number of Electrodes; Gamry E01; 1xPBS')
+title('In Vitro Impedance and Number of Electrodes; Gamry E01; Control')
 leg = legend('1', '2', '4', '8', '16', '1 (repeated)');
 title(leg,'Connected Electrodes');
 
-%% Plot Gamry Impedance vs increasing electrode number_ 2xPBS
+%% Plot Gamry Impedance vs increasing electrode number_ModCounterE
 figure
 colorArray = lines( 6 );
 pointerArray = [ 5 3 2 1 4 6]; 
 for ii = 1:6
     jj = pointerArray( ii );
-    loglog( gamryStructure_2x(jj).f, ...
-            gamryStructure_2x(jj).Zmag, ...
+    loglog( gamryStructure_C2(jj).f, ...
+            gamryStructure_C2(jj).Zmag, ...
             'Color', colorArray( ii, : ))
     hold on
 end
@@ -64,18 +65,18 @@ grid on
 xlim([100 100000])
 xlabel('Frequency (Hz)')
 ylabel('Mag(Impedance)')
-title('In Vitro Impedance V Number of Electrodes; Gamry E01; 2xPBS')
+title('In Vitro Impedance V Number of Electrodes; Gamry E01; Mod-CE')
 leg = legend('1', '2', '4', '8', '16', '1 (repeated)');
 title(leg,'Connected Electrodes');
 
-%% Plot Gamry Impedance vs increasing electrode number_0p1xPBS
+%% Plot Gamry Impedance vs increasing electrode number_ModReferenceE
 figure
 colorArray = lines( 6 );
 pointerArray = [ 5 3 2 1 4 6]; 
 for ii = 1:6
     jj = pointerArray( ii );
-    loglog( gamryStructure_0p1x(jj).f, ...
-            gamryStructure_0p1x(jj).Zmag, ...
+    loglog( gamryStructure_C3(jj).f, ...
+            gamryStructure_C3(jj).Zmag, ...
             'Color', colorArray( ii, : ))
     hold on
 end
@@ -83,7 +84,7 @@ grid on
 xlim([100 100000])
 xlabel('Frequency (Hz)')
 ylabel('Mag(Impedance)')
-title('In Vitro Impedance and Number of Electrodes; Gamry E01; 0.1xPBS')
+title('In Vitro Impedance and Number of Electrodes; Gamry E01; Mod-RE')
 leg = legend('1', '2', '4', '8', '16', '1 (repeated)');
 title(leg,'Connected Electrodes');
 
@@ -95,9 +96,9 @@ freqIndex = 1;
 pointerArray = [ 5 3 2 1 4 6]; 
 for ii = 1:6
     jj = pointerArray(ii);
-    impStructure_1x(ii) = gamryStructure_1x(jj).Zmag( freqIndex );
-    impStructure_2x(ii) = gamryStructure_2x(jj).Zmag( freqIndex );
-    impStructure_0p1x(ii) = gamryStructure_0p1x(jj).Zmag( freqIndex );
+    impStructure_1x(ii) = gamryStructure_C1(jj).Zmag( freqIndex );
+    impStructure_2x(ii) = gamryStructure_C2(jj).Zmag( freqIndex );
+    impStructure_0p1x(ii) = gamryStructure_C3(jj).Zmag( freqIndex );
 end
 for ii = 1:6
     impChangeArray_1x(ii) = abs( impStructure_1x( 1 ) - impStructure_1x( ii ) );
@@ -114,7 +115,7 @@ plot(numElectrodes, impChangeArray_0p1x(1:5), '-o');
 grid on
 xlabel('Number of Electrodes')
 ylabel('Impedance Change from Baseline')
-legend('1xPBS', '2xPBS', '0.1XPBS')
+legend('C1', 'C2', 'C3')
 title('Impedance Change; F = 100kHz')
 % Figure without 0p1 for clarity
 figure
@@ -136,9 +137,9 @@ freqIndex = 1;
 pointerArray = [ 5 3 2 1 4 6]; 
 for ii = 1:6
     jj = pointerArray(ii);
-    impStructure_1x(ii) = gamryStructure_1x(jj).Zmag( freqIndex );
-    impStructure_2x(ii) = gamryStructure_2x(jj).Zmag( freqIndex );
-    impStructure_0p1x(ii) = gamryStructure_0p1x(jj).Zmag( freqIndex );
+    impStructure_1x(ii) = gamryStructure_C1(jj).Zmag( freqIndex );
+    impStructure_2x(ii) = gamryStructure_C2(jj).Zmag( freqIndex );
+    impStructure_0p1x(ii) = gamryStructure_C3(jj).Zmag( freqIndex );
 end
 for ii = 1:6
     impChangeArray_1x(ii) = ((abs( impStructure_1x( 1 ) - impStructure_1x( ii ) ))./impStructure_1x( 1 ))*100;
@@ -155,8 +156,14 @@ plot(numElectrodes, impChangeArray_0p1x(1:5), '-o');
 grid on
 xlabel('Number of Electrodes')
 ylabel('%Impedance Change from Baseline')
-legend('1xPBS', '2xPBS', '0.1XPBS')
+legend('C1', 'C2', 'C3')
 title('% Impedance Change; F = 100kHz')
 
 %%
-% annotateOpen(1);
+% Make sure everything is actually plotting correctly here. Right now it
+% looks like moving the reference electrode closer has increased the error.
+% If this is the case, it's possible that the exposed surface area is
+% smaller than before. Would this have a big effect? What else does this
+% imply? 
+% UPDAte: 20201001, I did have C2 and C3 switched (in the wrong folder).
+% Should be correct now
