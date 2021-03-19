@@ -81,6 +81,7 @@ end
 % current = amps??
 conductivity_val = 2.5;    % S/m From Cogan et al. 2007
 conductivity_array = linspace(0.25,2.5,18);
+conductivity_array = linspace(0.2,1.5,18);
 order_array = [ 3 4 5 6]; 
 deltaV_numerator = 1/( 4*pi*conductivity_val );
 for ii = 1:4
@@ -111,6 +112,7 @@ for ii = 1:4
     end
     I_change(:,ii) = V_contribution_total(:,ii)./( customStructure_1(2).Zmag(:,5) + 4.7e3);
     I_change_test(:,ii) = V_contribution_total(:,ii)./( customStructure_1(2).Zreal(:,5) + customStructure_1(2).Zimag(:,5));
+    % Comparing a few different ways of calculating current
     I_predicted(:,ii) = (customStructure_1(2).Vpp_sig_rec(:,5)./(4.7e3) - ...
                         I_change(:,ii)); % be sure to change to correct index for each concentration
     I_predicted_test(:,ii) = abs(customStructure_1(2).Vpp_sig_rec(:,5)./(4.7e3) - ...
@@ -121,6 +123,8 @@ for ii = 1:4
     I_predicted_test_test(:,ii) = abs(Vm_rectangular./(4.7e3) - ...
                         I_change_test(:,ii));
 end
+    % Storing the original for comparisons
+    I_measured = customStructure_1(2).Vpp_sig_rec(:,5)./(4.7e3);
 
 % Plot current estimates vs actual
 figure
@@ -152,6 +156,7 @@ for ii = 1:4
     phases_rec = customStructure_1(ii+2).Phase_rad(:,5);
     Zcomponent = Ztot.*cos(phases_rec) + 1i*Ztot.*sin(phases_rec);
     Zest = abs(Zcomponent - 4.7e3);
+    Zest_array(:,ii) = Zest;
     semilogx(customStructure_1(ii+2).f(:,5), ...
          Zest, 'o', ...
     'Color', colorArray( ii, : ), 'LineWidth', 1.5)
