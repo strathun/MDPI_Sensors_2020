@@ -50,6 +50,7 @@ for kk = 3:length(fnames)
     dataStructure(kk-2).Zim = rawTable.Var6;
     dataStructure(kk-2).Zmag = sqrt( ( rawTable.Var5.^2 ) + ( rawTable.Var6.^2 ) );
     dataStructure(kk-2).Phase = rawTable.Var9;
+    dataStructure(kk-2).Idc = rawTable.Var10;
 end
 
 cd(currentFolder)
