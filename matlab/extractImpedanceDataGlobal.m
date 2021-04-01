@@ -12,6 +12,7 @@ function [dataStructure] = extractImpedanceDataGlobal(relPath)
 %       Zim    :
 %       Phase  :
 %       fnames : cell containing filenames. Same order as other outputs.
+%       Idc    : Listed as Idc. Not sure exactly what this refers to
 
 % Sets relative filepaths
 currentFile = mfilename( 'fullpath' );  % Gets path for THIS script
