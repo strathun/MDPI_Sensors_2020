@@ -14,6 +14,7 @@ function [dataStructure] = extractFEMData(relPath)
 %       WE_I        : Current through WE surface
 %       WEOffset_V  : Voltage at ~ 5um from WE surface
 %       Gnd_I       : Current going through the ground
+%       Ctr_I       : All current leaving the counter electrode
 
 % Sets relative filepaths
 currentFile = mfilename( 'fullpath' );  % Gets path for THIS script
@@ -40,7 +41,7 @@ for kk = 3:length(fnames)
     fname = fnames(kk);
     fidi = fopen(fname{1},'r');
     numHeaders = 35;
-    Data = textscan(fidi, '%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f', ...                    
+    Data = textscan(fidi, '%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f', ...                    
                    'HeaderLines', 5, 'CollectOutput',1);
     Data = cell2mat(Data);
     fclose(fidi);
@@ -54,6 +55,7 @@ for kk = 3:length(fnames)
     dataStructure(kk-2).fname = fname;
     dataStructure(kk-2).f = Data(:,1);
     dataStructure(kk-2).Ref_V = Data(:,2);
+    dataStructure(kk-2).Ctr_I = Data(:,67);
     % Couldn't figure out how to reorganize columns in COMSOL so have to
     % have hardcoded here. Will ened to update if any additional data is
     % added.
@@ -75,6 +77,7 @@ for kk = 3:length(fnames)
         jj = Gnd_I_order(ii);
         dataStructure(kk-2).Gnd_I = [dataStructure(kk-2).Gnd_I Data(:,jj)];
     end
+        
 end
 
 cd(currentFolder)
