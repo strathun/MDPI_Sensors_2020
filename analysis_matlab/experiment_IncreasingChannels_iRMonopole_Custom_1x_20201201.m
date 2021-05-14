@@ -79,9 +79,11 @@ end
 %% Block 2: Calculate deltaV at WE surface
 % Need to do per group since current will change
 % current = amps??
-conductivity_val = 2.5;    % S/m From Cogan et al. 2007
+% conductivity_val = 2.5;    % S/m From Cogan et al. 2007; Was looking at
+                             % the wrong solution!! Should have been 1.2
+conductivity_val = 1.2;    % S/m From Cogan et al. 2007
 conductivity_array = linspace(0.25,2.5,18);
-conductivity_array = linspace(0.2,1.5,18);
+% conductivity_array = logspace(-0.699,0.176,18); % trying to get range of .2 to 1.5
 order_array = [ 3 4 5 6]; 
 deltaV_numerator = 1/( 4*pi*conductivity_val );
 for ii = 1:4
@@ -89,7 +91,7 @@ for ii = 1:4
     for jj = 1:16
         I_temp = customStructure_1(kk).Vpp_sig_rec(:,5)./4.7e3; 
         deltaV_numerator = 1./( 4*pi.*conductivity_val' );
-%         deltaV_numerator = 1./( 4*pi.*conductivity_array' );
+        deltaV_numerator = 1./( 4*pi.*conductivity_array' );
         deltaV_contribution{ii}(:,jj) = ( deltaV_numerator ) .* ...
                                     ( I_temp./ hypot_dimensions(jj) );
     end
