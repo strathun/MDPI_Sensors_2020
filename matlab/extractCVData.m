@@ -17,7 +17,7 @@ cd(fileparts(currentFile));
 cd(relPath);
 
 % Hard coded magic numbers
-dataRows = 1400;    % number of rows in a CV cycle. (See .dta file to change)
+% dataRows = 1400;    % number of rows in a CV cycle. (See .dta file to change)
 dataColumns = 11;   % number of columns in a CV cycle. (See .dta file to change)
 
 %change .dat files to ..txt files for processing
@@ -38,17 +38,21 @@ for ii = 1:length(fnames)
     
     % Finds start of each scan in data file
     sniffer = 'CURVE';
+    sniffer2 = 'OCVCURVE';
     c = textread(currentNameStr,'%s','delimiter','\n');
     curveStartIndex = find(~cellfun(@isempty,strfind(c, sniffer )));
+    OCVIndex = find(~cellfun(@isempty,strfind(c, sniffer2 )));
+    curveStartIndex = curveStartIndex(curveStartIndex~=OCVIndex); % Removes this if there is a conditioning measurement
     fullTraces = length(curveStartIndex) - 1;   % Final curve is typically not a complete measurement, so we're ignoring it.
     
     dataStructure(ii).fname = currentNameStr;
     for jj = 1:fullTraces
         line = curveStartIndex(jj) + 1;
+        dataRows = curveStartIndex(jj+1) - curveStartIndex(jj) - 3;
         % Grab and store all the data
-        [dataArray] = textToArray( fnames{ii}, line + 1, dataRows, dataColumns );  % line + 1 because header is 2 lines long
-        dataStructure(ii).potential(jj,:) = dataArray(2:end,4);
-        dataStructure(ii).current(jj,:) = dataArray(2:end,5);
+        [dataArray] = textToArray( fnames{ii}, line, dataRows, dataColumns );  % line + 1 because header is 2 lines long
+        dataStructure(ii).potential{jj,:} = dataArray(1:end,4);
+        dataStructure(ii).current{jj,:} = dataArray(1:end,5);
     end    
 end
 cd( currentFolder )
